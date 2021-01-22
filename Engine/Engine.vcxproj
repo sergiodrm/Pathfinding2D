@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DrawUtilities\Grid.h" />
+    <ClInclude Include="Engine\DrawUtilities\Shapes.h" />
     <ClInclude Include="Engine\ExternalLibs\glfw3.h" />
     <ClInclude Include="Engine\ExternalLibs\glfw3native.h" />
     <ClInclude Include="Engine\ExternalLibs\litegfx.h" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\DrawUtilities\Grid.cpp" />
+    <ClCompile Include="Engine\DrawUtilities\Shapes.cpp" />
     <ClCompile Include="Engine\MacroObject.cpp" />
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Render\RenderEngine.cpp" />

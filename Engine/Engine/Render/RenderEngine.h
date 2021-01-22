@@ -9,6 +9,8 @@ struct GLFWwindow;
 
 // Callback draw function declaration
 typedef void (*ExternalDrawFunction)(void*, const Vector2&);
+// Callback for mouse input
+typedef void (*MouseInputCallback)(int, int, const Vector2&);
 
 class ENGINE_API CRenderEngine : public ISingletonBase<CRenderEngine>
 {
@@ -37,6 +39,11 @@ public:
   Vector2 GetWindowSize() const;
 
   void InsertExternalDrawFunction(void* _pInstance, ExternalDrawFunction _pCallback);
+
+  /**
+  *     Set callbacks
+  */
+  void SetMouseInputCallback(MouseInputCallback _pCallback);
 
   /**
   *     Draw functions

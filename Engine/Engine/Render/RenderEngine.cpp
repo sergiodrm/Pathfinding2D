@@ -51,6 +51,11 @@ void CRenderEngine::InsertExternalDrawFunction(void* _pInstance, ExternalDrawFun
   m_externalDrawFunctions.push_back(std::pair<void*, ExternalDrawFunction>(_pInstance, _pCallback));
 }
 
+void CRenderEngine::SetMouseInputCallback(MouseInputCallback _pCallback)
+{
+  
+}
+
 void CRenderEngine::SetColor(float _fGrey)
 {
   lgfx_setcolor(_fGrey, _fGrey, _fGrey, 1.f);
