@@ -1,6 +1,6 @@
 #pragma once
 
-#include <assert.h>
+#include "../MacroObject.h"
 
 #define DECLARE_SINGLETON_CLASS(_CLASS) \
 private:\
@@ -10,7 +10,7 @@ _CLASS(const _CLASS&) = delete; \
 void operator=(const _CLASS&) = delete; 
 
 template <typename T>
-class ISingletonBase
+class ENGINE_API ISingletonBase
 {
 private:
 
@@ -20,14 +20,14 @@ protected:
 
   static void CreateSingleton()
   {
-    assert(m_pInstance == nullptr)
+    assert(m_pInstance == nullptr);
     m_pInstance = new T();
   }
 
   static T& GetSingleton()
   {
     assert(m_pInstance != nullptr);
-    return m_pInstance;
+    return *m_pInstance;
   }
 
   static void DestroySingleton()

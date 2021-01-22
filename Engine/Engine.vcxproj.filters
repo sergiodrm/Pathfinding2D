@@ -3,9 +3,21 @@
   <ItemGroup>
     <ClInclude Include="Engine\Render\RenderEngine.h" />
     <ClInclude Include="Engine\MacroObject.h" />
-    <ClInclude Include="Engine\Utilities\SingletonBase.h" />
+    <ClInclude Include="Engine\Math\Vector2.h" />
+    <ClInclude Include="Engine\ExternalLibs\glfw3.h" />
+    <ClInclude Include="Engine\ExternalLibs\glfw3native.h" />
+    <ClInclude Include="Engine\ExternalLibs\litegfx.h" />
+    <ClInclude Include="Engine\ExternalLibs\stb_image.h" />
+    <ClInclude Include="Engine\CoreUtilities\SingletonBase.h" />
+    <ClInclude Include="Engine\DrawUtilities\Grid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Render\RenderEngine.cpp" />
+    <ClCompile Include="Engine\MacroObject.cpp" />
+    <ClCompile Include="Engine\Math\Vector2.cpp" />
+    <ClCompile Include="Engine\DrawUtilities\Grid.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Engine\ExternalLibs\glfw3.lib" />
   </ItemGroup>
 </Project>
