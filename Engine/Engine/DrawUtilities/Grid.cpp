@@ -62,13 +62,13 @@ void CGrid::Draw(void* _pInstance, const Vector2 & _screenSize)
 
 void CGrid::Draw_Internal(const Vector2& _screenSize)
 {
-  DrawGrid(_screenSize);
   DrawShapes(_screenSize);
+  DrawGrid(_screenSize);
 }
 
 void CGrid::DrawGrid(const Vector2& _screenSize) const
 {
-  CRenderEngine::SetColor(0.9f);
+  CRenderEngine::SetColor(0.5f);
   for (size_t uRow = 1; uRow < m_uNumberOfRows; uRow++)
   {
     Vector2 origin(

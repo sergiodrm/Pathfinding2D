@@ -20,7 +20,9 @@ namespace Pathfinding
     void SetX(uint _x);
     void SetY(uint _y);
 
-    bool operator==(const Vec2& _other);
+    bool operator==(const Vec2& _other) const;
+    bool operator!=(const Vec2& _other) const;
+    Vec2 operator-(const Vec2& _other) const;
 
   private:
     uint m_x;

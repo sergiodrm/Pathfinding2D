@@ -83,10 +83,10 @@ void CRenderEngine::Init_Internal()
     int iRenderStatus = glfwInit();
     ensure_msg(iRenderStatus == GLFW_TRUE, "Render failed (glfwInit)");
   }
-  m_pWindow = glfwCreateWindow(800, 600, "Pathfinding project", nullptr, nullptr);
+  m_pWindow = glfwCreateWindow(1024, 720, "Pathfinding project", nullptr, nullptr);
   ensure_msg(m_pWindow != nullptr, "Window creation failed");
   glfwMakeContextCurrent(m_pWindow);
-  lgfx_setup2d(800, 600);
+  lgfx_setup2d(1024, 720);
   PRINT_LOG("Render inits successfuly");
 }
 

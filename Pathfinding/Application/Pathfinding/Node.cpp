@@ -16,3 +16,31 @@ Pathfinding::Vec2 Pathfinding::CNode::GetCoordenates() const
   return m_coordenates;
 }
 
+float Pathfinding::CNode::GetCostG() const
+{
+  return m_g;
+}
+float Pathfinding::CNode::GetCostH() const
+{
+  return m_h;
+}
+
+Pathfinding::CNode* Pathfinding::CNode::GetParent() const
+{
+  return m_pParent;
+}
+
+void Pathfinding::CNode::SetCostG(float _g)
+{
+  m_g = _g;
+}
+void Pathfinding::CNode::SetCostH(float _h)
+{
+  m_h = _h;
+}
+
+void Pathfinding::CNode::SetParent(CNode* _pParentNode)
+{
+  m_pParent = _pParentNode;
+}
+

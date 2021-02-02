@@ -7,6 +7,10 @@
 
 namespace Pathfinding
 {
+	struct SColor
+	{
+		float m_tColor[4];
+	};
 	class CWorldGenerator
 	{
 
@@ -18,15 +22,18 @@ namespace Pathfinding
 		void SetDestiny(const Vec2& _destiny);
 		void SetHeuristic(HeuristicFunction _pFunction);
 
-		void Update();
+		void Init(const Vec2& _origin, const Vec2& _destiny);
+		void PathfindingSlot();
 
 	private:
 
 		std::vector<CNode*>::iterator GetLessScoreNode();
-		void UpdateGrid();
-		bool UpdateCurrentNode(CNode* _pCurrentNode);
-		uint GetIndexNode(CNode* _pNode) const;
-
+		void UpdateGrid(const Vec2& _currentPosition);
+		bool CheckGoalAchieved(CNode* _pCurrentNode) const;
+		bool CheckCollision(const Vec2& _coordenates) const;
+		CNode* FindNode(std::vector<CNode*>& _container, const Vec2& _coordenates) const;
+		void MakePath(CNode* _pGoal);
+		SColor GetColor(const Vec2& _coordenates, bool _bInOpenList = true);
 	private:
 
 		CGrid m_grid;
@@ -35,5 +42,6 @@ namespace Pathfinding
 		HeuristicFunction m_pHeuristicFunction;
 		std::vector<CNode*> m_openNodes;
 		std::vector<CNode*> m_closedNodes;
+		bool m_bPathFound;
 	};
 }

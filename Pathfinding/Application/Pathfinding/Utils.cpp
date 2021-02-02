@@ -24,7 +24,17 @@ void Pathfinding::Vec2::SetY(uint _y)
   m_y = _y;
 }
 
-bool Pathfinding::Vec2::operator==(const Vec2& _other)
+bool Pathfinding::Vec2::operator==(const Vec2& _other) const
 {
   return m_x == _other.m_x && m_y == _other.m_y;
+}
+
+bool Pathfinding::Vec2::operator!=(const Vec2& _other) const
+{
+  return m_x != _other.m_x || m_y != _other.m_y;
+}
+
+Pathfinding::Vec2 Pathfinding::Vec2::operator-(const Vec2& _other) const
+{
+  return Vec2(m_x - _other.m_x, m_y - _other.m_y);
 }

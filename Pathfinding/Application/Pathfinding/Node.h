@@ -13,6 +13,13 @@ namespace Pathfinding
     float GetScore() const;
     Vec2 GetCoordenates() const;
 
+    float GetCostG() const;
+    float GetCostH() const;
+    CNode* GetParent() const;
+    void SetCostG(float _g);
+    void SetCostH(float _h);
+    void SetParent(CNode* _pParentNode);
+
   private:
 
     CNode* m_pParent;
