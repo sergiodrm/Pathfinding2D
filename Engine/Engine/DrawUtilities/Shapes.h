@@ -9,8 +9,8 @@ protected:
 
   Vector2 m_position;
   Vector2 m_size;
-  float m_tColor[4];
   bool m_bActive;
+  float m_tColor[4];
 
 public:
 

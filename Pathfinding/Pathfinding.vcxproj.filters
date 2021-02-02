@@ -2,5 +2,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Application\Pathfinding\Node.cpp" />
+    <ClCompile Include="Application\Pathfinding\Heuristic.cpp" />
+    <ClCompile Include="Application\Pathfinding\Utils.cpp" />
+    <ClCompile Include="Application\Pathfinding\WorldGenerator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application\Pathfinding\Node.h" />
+    <ClInclude Include="Application\Pathfinding\Heuristic.h" />
+    <ClInclude Include="Application\Pathfinding\Utils.h" />
+    <ClInclude Include="Application\Pathfinding\WorldGenerator.h" />
   </ItemGroup>
 </Project>

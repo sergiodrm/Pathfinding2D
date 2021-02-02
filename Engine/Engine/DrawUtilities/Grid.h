@@ -27,6 +27,8 @@ public:
   void SetRectangleColor(size_t _uRow, size_t _uCol, float _tColor[4]);
 
   inline size_t GetSize() const { return m_uNumberOfRows * m_uNumberOfColumns; }
+  inline size_t GetNumOfRows() const { return m_uNumberOfRows; }
+  inline size_t GetNumOfColumns() const { return m_uNumberOfColumns; }
 
   static void Draw(void* _pInstance, const Vector2& _screenSize);
 

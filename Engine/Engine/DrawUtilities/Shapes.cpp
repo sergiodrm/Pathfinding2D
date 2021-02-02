@@ -4,13 +4,13 @@
 CShape::CShape()
   : m_position(Vector2(0.f, 0.f)),
   m_size(Vector2(0.f, 0.f)),
-  m_tColor{1.f, 1.f, 1.f, 1.f}
+  m_tColor{ 1.f, 1.f, 1.f, 1.f }
 {}
 
 CShape::CShape(const Vector2& _position, const Vector2& _size)
   : m_position(_position),
   m_size(_size),
-  m_tColor{1.f, 1.f, 1.f, 1.f}
+  m_tColor{ 1.f, 1.f, 1.f, 1.f }
 {}
 
 void CShape::Active()
