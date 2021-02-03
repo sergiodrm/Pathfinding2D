@@ -4,10 +4,13 @@
 
 #include "Heuristic.h"
 
+#define RENDER_FEEDBACK 0
+
 Pathfinding::CPathSolver::CPathSolver(const Vec2& _worldSize)
   : m_grid(_worldSize.GetX(), _worldSize.GetY())
 {
   m_pHeuristicFunction = std::bind(&Heuristics::Euclidean, std::placeholders::_1, std::placeholders::_2);
+  //m_pHeuristicFunction = std::bind(&Heuristics::Manhattan, std::placeholders::_1, std::placeholders::_2);
   m_origin = Vec2(0, 0);
   m_destiny = Vec2(_worldSize.GetX() - 1, _worldSize.GetY() - 1);
 }
@@ -40,6 +43,7 @@ void Pathfinding::CPathSolver::Init(const Vec2& _origin, const Vec2& _destiny)
   pInit->SetCostG(0);
   pInit->SetCostH(m_pHeuristicFunction(m_origin, m_destiny));
   m_openNodes.push_back(pInit);
+#if RENDER_FEEDBACK
   m_grid.ActiveRectangle(_origin.GetY(), _origin.GetX());
   m_grid.ActiveRectangle(_destiny.GetY(), _destiny.GetX());
   {
@@ -50,12 +54,18 @@ void Pathfinding::CPathSolver::Init(const Vec2& _origin, const Vec2& _destiny)
     float tColor[4] = { 0.2f, 0.7f, 0.f, 1.f };
     m_grid.SetRectangleColor(_destiny.GetY(), _destiny.GetX(), tColor);
   }
+#endif
 }
 
 void Pathfinding::CPathSolver::PathfindingSlot()
 {
+#if RENDER_FEEDBACK
   if (!m_bPathFound)
   {
+#else
+  while (!m_bPathFound)
+  {
+#endif // 0
     SortVector(m_openNodes);
     CNode* pCurrentNode = GetNextPathNode();
     UpdateLists();
@@ -80,41 +90,12 @@ void Pathfinding::CPathSolver::PathfindingSlot()
         if (CheckCollision(newCoordenates))
         {
           CreateNode(pCurrentNode, newCoordenates);
-         /* float totalCost = pCurrentNode->GetCostG() + 1.f;
-          CNode* pNewNode = FindNode(m_openNodes, newCoordenates);
-          if (pNewNode == nullptr)
-          {
-            pNewNode = FindNode(m_closedNodes, newCoordenates);
-            if (pNewNode == nullptr)
-            {
-              pNewNode = new CNode(newCoordenates, pCurrentNode);
-              pNewNode->SetCostG(totalCost);
-              pNewNode->SetCostH(m_pHeuristicFunction(newCoordenates, m_destiny));
-              m_openNodes.push_back(pNewNode);
-            }
-            else if(totalCost < pNewNode->GetCostG())
-            {
-              pNewNode->SetParent(pCurrentNode);
-              pNewNode->SetCostG(totalCost);
-              for (std::vector<CNode*>::iterator it = m_closedNodes.begin(); it != m_closedNodes.end(); ++it)
-              {
-                if (*it == pNewNode)
-                {
-                  m_closedNodes.erase(it);
-                  break;
-                }
-              }
-              m_openNodes.push_back(pNewNode);
-            }
-          }
-          else if (totalCost < pNewNode->GetCostG())
-          {
-            pNewNode->SetParent(pCurrentNode);
-            pNewNode->SetCostG(totalCost);
-          }*/
         }
       }
+#if RENDER_FEEDBACK
       UpdateGrid(pCurrentNode->GetCoordenates());
+#endif // RENDER_FEEDBACK
+
     }
   }
 }
@@ -182,6 +163,9 @@ void Pathfinding::CPathSolver::MakePath(CNode* _pGoal)
     {
       color = GetColor(pCurrent->GetCoordenates());
     }
+#if !RENDER_FEEDBACK
+    m_grid.ActiveRectangle(pCurrent->GetCoordenates().GetY(), pCurrent->GetCoordenates().GetX());
+#endif
     m_grid.SetRectangleColor(pCurrent->GetCoordenates().GetY(), pCurrent->GetCoordenates().GetX(), color.m_tColor);
     pCurrent = pCurrent->GetParent();
   }
