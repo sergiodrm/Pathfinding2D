@@ -1,6 +1,6 @@
 
 #include "Grid.h"
-#include "../Render/RenderEngine.h"
+#include "Engine/Render/RenderEngine.h"
 
 CGrid::CGrid(size_t _uRows, size_t _uColumns)
   : m_uNumberOfRows(_uRows),

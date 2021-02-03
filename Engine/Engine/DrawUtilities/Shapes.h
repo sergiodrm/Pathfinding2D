@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Math/Vector2.h"
-#include "../MacroObject.h"
+#include "Engine/Math/Vector2.h"
+#include "Engine/MacroObject.h"
 
 class ENGINE_API CShape
 {

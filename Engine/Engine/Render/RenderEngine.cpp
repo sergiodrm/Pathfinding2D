@@ -1,6 +1,6 @@
 #include "RenderEngine.h"
-#include "../ExternalLibs/glfw3.h"
-#include "../MacroObject.h"
+#include "Engine/ExternalLibs/glfw3.h"
+#include "Engine/MacroObject.h"
 
 #define LITE_GFX_IMPLEMENTATION
 #include "../ExternalLibs/litegfx.h"

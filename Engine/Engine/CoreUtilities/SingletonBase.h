@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MacroObject.h"
+#include "Engine/MacroObject.h"
 
 #define DECLARE_SINGLETON_CLASS(_CLASS) \
 private:\

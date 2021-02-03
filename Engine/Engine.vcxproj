@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\External libs\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine\;$(SolutionDir)$(ProjectName)\External libs\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_EXPORTS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\External libs\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine\;$(SolutionDir)$(ProjectName)\External libs\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -169,6 +169,7 @@
     <ClInclude Include="Engine\Math\Vector2.h" />
     <ClInclude Include="Engine\Render\RenderEngine.h" />
     <ClInclude Include="Engine\CoreUtilities\SingletonBase.h" />
+    <ClInclude Include="Engine\Input\InputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\DrawUtilities\Grid.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="Engine\MacroObject.cpp" />
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Render\RenderEngine.cpp" />
+    <ClCompile Include="Engine\Input\InputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Engine\ExternalLibs\glfw3.lib" />

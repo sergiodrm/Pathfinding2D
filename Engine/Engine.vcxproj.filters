@@ -11,6 +11,7 @@
     <ClInclude Include="Engine\CoreUtilities\SingletonBase.h" />
     <ClInclude Include="Engine\DrawUtilities\Grid.h" />
     <ClInclude Include="Engine\DrawUtilities\Shapes.h" />
+    <ClInclude Include="Engine\Input\InputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Render\RenderEngine.cpp" />
@@ -18,6 +19,7 @@
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Engine\DrawUtilities\Grid.cpp" />
     <ClCompile Include="Engine\DrawUtilities\Shapes.cpp" />
+    <ClCompile Include="Engine\Input\InputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Engine\ExternalLibs\glfw3.lib" />

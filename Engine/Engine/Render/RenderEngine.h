@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../CoreUtilities/SingletonBase.h"
-#include "../Math/Vector2.h"
+#include "Engine/CoreUtilities/SingletonBase.h"
+#include "Engine/Math/Vector2.h"
 #include <vector>
 
 // Forward declaration
