@@ -2,6 +2,7 @@
 
 #include <functional>
 
+
 namespace Pathfinding
 {
   class Vec2;

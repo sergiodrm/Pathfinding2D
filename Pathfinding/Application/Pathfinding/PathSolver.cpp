@@ -1,8 +1,10 @@
-#include "WorldGenerator.h"
-#include "Heuristic.h"
-#include "Utils.h"
+#include "PathSolver.h"
 
-Pathfinding::CWorldGenerator::CWorldGenerator(const Vec2& _worldSize)
+#include <algorithm>
+
+#include "Heuristic.h"
+
+Pathfinding::CPathSolver::CPathSolver(const Vec2& _worldSize)
   : m_grid(_worldSize.GetX(), _worldSize.GetY())
 {
   m_pHeuristicFunction = std::bind(&Heuristics::Euclidean, std::placeholders::_1, std::placeholders::_2);
@@ -10,22 +12,22 @@ Pathfinding::CWorldGenerator::CWorldGenerator(const Vec2& _worldSize)
   m_destiny = Vec2(_worldSize.GetX() - 1, _worldSize.GetY() - 1);
 }
 
-void Pathfinding::CWorldGenerator::SetOrigin(const Vec2& _origin)
+void Pathfinding::CPathSolver::SetOrigin(const Vec2& _origin)
 {
   m_origin = _origin;
 }
 
-void Pathfinding::CWorldGenerator::SetDestiny(const Vec2& _destiny)
+void Pathfinding::CPathSolver::SetDestiny(const Vec2& _destiny)
 {
   m_destiny = _destiny;
 }
 
-void Pathfinding::CWorldGenerator::SetHeuristic(HeuristicFunction _pFunction)
+void Pathfinding::CPathSolver::SetHeuristic(HeuristicFunction _pFunction)
 {
   m_pHeuristicFunction = std::bind(_pFunction, std::placeholders::_1, std::placeholders::_2);
 }
 
-void Pathfinding::CWorldGenerator::Init(const Vec2& _origin, const Vec2& _destiny)
+void Pathfinding::CPathSolver::Init(const Vec2& _origin, const Vec2& _destiny)
 {
   m_origin = _origin;
   m_destiny = _destiny;
@@ -50,17 +52,16 @@ void Pathfinding::CWorldGenerator::Init(const Vec2& _origin, const Vec2& _destin
   }
 }
 
-void Pathfinding::CWorldGenerator::PathfindingSlot()
+void Pathfinding::CPathSolver::PathfindingSlot()
 {
   if (!m_bPathFound)
   {
-    std::vector<CNode*>::iterator pLessScoreNode = GetLessScoreNode();
-    m_closedNodes.push_back(*pLessScoreNode);
-    CNode* pCurrentNode = *pLessScoreNode;
-    m_openNodes.erase(pLessScoreNode);
+    SortVector(m_openNodes);
+    CNode* pCurrentNode = GetNextPathNode();
+    UpdateLists();
+    
     if (CheckGoalAchieved(pCurrentNode))
     {
-      // TODO terminar
       MakePath(pCurrentNode);
       m_bPathFound = true;
     }
@@ -78,7 +79,8 @@ void Pathfinding::CWorldGenerator::PathfindingSlot()
 
         if (CheckCollision(newCoordenates))
         {
-          float totalCost = pCurrentNode->GetCostG() + 1.f;
+          CreateNode(pCurrentNode, newCoordenates);
+         /* float totalCost = pCurrentNode->GetCostG() + 1.f;
           CNode* pNewNode = FindNode(m_openNodes, newCoordenates);
           if (pNewNode == nullptr)
           {
@@ -109,7 +111,7 @@ void Pathfinding::CWorldGenerator::PathfindingSlot()
           {
             pNewNode->SetParent(pCurrentNode);
             pNewNode->SetCostG(totalCost);
-          }
+          }*/
         }
       }
       UpdateGrid(pCurrentNode->GetCoordenates());
@@ -117,20 +119,19 @@ void Pathfinding::CWorldGenerator::PathfindingSlot()
   }
 }
 
-std::vector<Pathfinding::CNode*>::iterator Pathfinding::CWorldGenerator::GetLessScoreNode()
+Pathfinding::CNode* Pathfinding::CPathSolver::GetNextPathNode()
 {
-  std::vector<CNode*>::iterator lessScoreIterator = m_openNodes.begin();
-  for (std::vector<CNode*>::iterator iterator = m_openNodes.begin() + 1; iterator != m_openNodes.end(); ++iterator)
-  {
-    if ((*iterator)->GetScore() < (*lessScoreIterator)->GetScore())
-    {
-      lessScoreIterator = iterator;
-    }
-  }
-  return lessScoreIterator;
+  return m_openNodes.front();
 }
 
-void Pathfinding::CWorldGenerator::UpdateGrid(const Vec2& _currentPosition)
+void Pathfinding::CPathSolver::UpdateLists()
+{
+  CNode* pCurrentNode = GetNextPathNode();
+  m_closedNodes.push_back(pCurrentNode);
+  m_openNodes.erase(m_openNodes.begin());
+}
+
+void Pathfinding::CPathSolver::UpdateGrid(const Vec2& _currentPosition)
 {
   for (uint uIndex = 0; uIndex < m_openNodes.size(); ++uIndex)
   {
@@ -159,39 +160,34 @@ void Pathfinding::CWorldGenerator::UpdateGrid(const Vec2& _currentPosition)
   }
 }
 
-bool Pathfinding::CWorldGenerator::CheckGoalAchieved(CNode* _pCurrentNode) const
+bool Pathfinding::CPathSolver::CheckGoalAchieved(CNode* _pCurrentNode) const
 {
   return _pCurrentNode->GetCoordenates() == m_destiny;
 }
 
-bool Pathfinding::CWorldGenerator::CheckCollision(const Vec2& _coordenates) const
+bool Pathfinding::CPathSolver::CheckCollision(const Vec2& _coordenates) const
 {
+  // TODO Check with collision map (In coming).
   return _coordenates.GetX() >= 0 && _coordenates.GetX() < m_grid.GetNumOfColumns() &&
     _coordenates.GetY() >= 0 && _coordenates.GetY() < m_grid.GetNumOfRows();
 }
 
-Pathfinding::CNode* Pathfinding::CWorldGenerator::FindNode(std::vector<CNode*>& _container, const Vec2& _coordenates) const
-{
-  for (CNode* pIterator : _container)
-  {
-    if (pIterator->GetCoordenates() == _coordenates)
-      return pIterator;
-  }
-  return nullptr;
-}
-
-void Pathfinding::CWorldGenerator::MakePath(CNode* _pGoal)
+void Pathfinding::CPathSolver::MakePath(CNode* _pGoal)
 {
   CNode* pCurrent = _pGoal;
   while (pCurrent != nullptr)
   {
-    SColor color = GetColor(pCurrent->GetCoordenates());
-    m_grid.SetRectangleColor(pCurrent->GetCoordenates().GetX(), pCurrent->GetCoordenates().GetY(), color.m_tColor);
+    SColor color({199.f / 255.f, 0.f, 57.f / 255.f, 1.f});
+    if (pCurrent->GetCoordenates() == m_destiny || pCurrent->GetCoordenates() == m_origin)
+    {
+      color = GetColor(pCurrent->GetCoordenates());
+    }
+    m_grid.SetRectangleColor(pCurrent->GetCoordenates().GetY(), pCurrent->GetCoordenates().GetX(), color.m_tColor);
     pCurrent = pCurrent->GetParent();
   }
 }
 
-Pathfinding::SColor Pathfinding::CWorldGenerator::GetColor(const Vec2& _coordenates, bool _bInOpenList)
+Pathfinding::SColor Pathfinding::CPathSolver::GetColor(const Vec2& _coordenates, bool _bInOpenList) const
 {
   if (_coordenates == m_origin)
   {
@@ -205,9 +201,63 @@ Pathfinding::SColor Pathfinding::CWorldGenerator::GetColor(const Vec2& _coordena
   }
   if (_bInOpenList)
   {
-    SColor color({ 1.f, 1.f, 0.f, 1.f });
+    SColor color({ 255.f / 255.f, 195.f / 255.f, 0.f, 1.f });
     return color;
   }
-  SColor color({ 1.f, 0.f, 1.f, 1.f });
+  SColor color({ 88.f / 255.f, 24.f / 255.f, 69.f / 255.f, 1.f });
   return color;
+}
+
+void Pathfinding::CPathSolver::CreateNode(CNode* _pParent, const Vec2& _coordenates)
+{
+  CNode* pNodeInOpenList = FindNode(m_openNodes, _coordenates);
+  CNode* pNodeInClosedList = FindNode(m_closedNodes, _coordenates);
+  int deltaX = static_cast<int>(_coordenates.GetX()) - static_cast<int>(_pParent->GetCoordenates().GetX());
+  int deltaY = static_cast<int>(_coordenates.GetY()) - static_cast<int>(_pParent->GetCoordenates().GetY());
+  float costAdded = static_cast<float>(deltaX + deltaY);
+  float totalCost = _pParent->GetCostG() + costAdded;
+  if (pNodeInOpenList == nullptr && pNodeInClosedList == nullptr)
+  {
+    CNode* pNewNode = new CNode(_coordenates, _pParent);
+    pNewNode->SetCostG(totalCost);
+    pNewNode->SetCostH(m_pHeuristicFunction(_coordenates, m_destiny));
+    m_openNodes.push_back(pNewNode);
+  }
+  else
+  {
+    CNode* pExistingNode = pNodeInClosedList != nullptr ? pNodeInClosedList : pNodeInOpenList;
+    if (totalCost < pExistingNode->GetCostG())
+    {
+      pExistingNode->SetCostG(totalCost);
+      pExistingNode->SetParent(_pParent);
+      if (pNodeInClosedList != nullptr)
+      {
+        std::vector<CNode*>::iterator itToDelete;
+        for (itToDelete = m_closedNodes.begin(); itToDelete != m_closedNodes.end(); ++itToDelete)
+        {
+          if (*itToDelete == pNodeInClosedList)
+          {
+            m_closedNodes.erase(itToDelete);
+            break;
+          }
+        }
+        m_openNodes.push_back(pExistingNode);
+      }
+    }
+  }
+}
+
+Pathfinding::CNode* Pathfinding::CPathSolver::FindNode(std::vector<CNode*>& _container, const Vec2& _coordenates)
+{
+  for (CNode* pIterator : _container)
+  {
+    if (pIterator->GetCoordenates() == _coordenates)
+      return pIterator;
+  }
+  return nullptr;
+}
+
+void Pathfinding::CPathSolver::SortVector(std::vector<CNode*>& _vector_)
+{
+  std::sort(_vector_.begin(), _vector_.end(), [](const CNode* _a, const CNode* _b) {return _a->GetScore() < _b->GetScore(); });
 }

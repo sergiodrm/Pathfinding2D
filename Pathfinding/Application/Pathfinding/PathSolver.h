@@ -2,8 +2,8 @@
 
 #include "Engine/DrawUtilities/Grid.h"
 #include "Utils.h"
-#include "Node.h"
 #include <vector>
+#include "Node.h"
 
 namespace Pathfinding
 {
@@ -11,12 +11,12 @@ namespace Pathfinding
 	{
 		float m_tColor[4];
 	};
-	class CWorldGenerator
-	{
 
+	class CPathSolver
+	{
 	public:
 
-		CWorldGenerator(const Vec2& _worldSize);
+		CPathSolver(const Vec2& _worldSize);
 
 		void SetOrigin(const Vec2& _origin);
 		void SetDestiny(const Vec2& _destiny);
@@ -26,14 +26,17 @@ namespace Pathfinding
 		void PathfindingSlot();
 
 	private:
-
-		std::vector<CNode*>::iterator GetLessScoreNode();
+		CNode* GetNextPathNode();
+		void UpdateLists();
 		void UpdateGrid(const Vec2& _currentPosition);
 		bool CheckGoalAchieved(CNode* _pCurrentNode) const;
 		bool CheckCollision(const Vec2& _coordenates) const;
-		CNode* FindNode(std::vector<CNode*>& _container, const Vec2& _coordenates) const;
 		void MakePath(CNode* _pGoal);
-		SColor GetColor(const Vec2& _coordenates, bool _bInOpenList = true);
+		SColor GetColor(const Vec2& _coordenates, bool _bInOpenList = true) const;
+		void CreateNode(CNode* _pParent, const Vec2& _coordenates);
+
+		static void SortVector(std::vector<CNode*>& _vector_);
+    static CNode* FindNode(std::vector<CNode*>& _container, const Vec2& _coordenates);
 	private:
 
 		CGrid m_grid;

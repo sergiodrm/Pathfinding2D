@@ -8,7 +8,7 @@ namespace Pathfinding
   {
   public:
 
-    CNode(Vec2 _coordenates, CNode* _pParent = nullptr);
+    CNode(const Vec2& _coordenates, CNode* _pParent = nullptr);
 
     float GetScore() const;
     Vec2 GetCoordenates() const;

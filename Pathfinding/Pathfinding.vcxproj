@@ -159,13 +159,13 @@
     <ClCompile Include="Application\Pathfinding\Node.cpp" />
     <ClCompile Include="Application\Pathfinding\Heuristic.cpp" />
     <ClCompile Include="Application\Pathfinding\Utils.cpp" />
-    <ClCompile Include="Application\Pathfinding\WorldGenerator.cpp" />
+    <ClCompile Include="Application\Pathfinding\PathSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Pathfinding\Node.h" />
     <ClInclude Include="Application\Pathfinding\Heuristic.h" />
     <ClInclude Include="Application\Pathfinding\Utils.h" />
-    <ClInclude Include="Application\Pathfinding\WorldGenerator.h" />
+    <ClInclude Include="Application\Pathfinding\PathSolver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
