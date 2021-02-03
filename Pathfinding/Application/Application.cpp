@@ -7,7 +7,7 @@ int main()
   CRenderEngine::Init();
 
   Pathfinding::CPathSolver world(Pathfinding::Vec2(50, 50));
-  world.Init(Pathfinding::Vec2(0, 0), Pathfinding::Vec2(1, 42));
+  world.Init(Pathfinding::Vec2(0, 0), Pathfinding::Vec2(49, 42));
 
   while (CRenderEngine::Get().IsWindowRunning())
   {
