@@ -1,7 +1,8 @@
 #include "PathSolver.h"
 
 #include <algorithm>
-
+#include "Engine/Timer/TimeManager.h"
+#include "Engine/MacroObject.h"
 #include "Heuristic.h"
 
 #define RENDER_FEEDBACK 0
@@ -63,6 +64,7 @@ void Pathfinding::CPathSolver::PathfindingSlot()
   if (!m_bPathFound)
   {
 #else
+  CTimeManager::GetInstance().StartTimer();
   while (!m_bPathFound)
   {
 #endif // 0
@@ -98,6 +100,14 @@ void Pathfinding::CPathSolver::PathfindingSlot()
 
     }
   }
+#if !RENDER_FEEDBACK
+  static bool bPrint = true;
+  if (bPrint)
+  {
+    PRINT_LOG("Pathfinding time: %.5f", CTimeManager::GetInstance().StopTimer());
+    bPrint = false;
+  }
+#endif
 }
 
 Pathfinding::CNode* Pathfinding::CPathSolver::GetNextPathNode()

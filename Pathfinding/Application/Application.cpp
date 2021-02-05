@@ -1,13 +1,15 @@
 
 #include "Engine/Render/RenderEngine.h"
+#include "Engine/Timer/TimeManager.h"
 #include "Pathfinding/PathSolver.h"
 
 int main()
 {
   CRenderEngine::Init();
+  CTimeManager::Init();
 
-  Pathfinding::CPathSolver world(Pathfinding::Vec2(50, 50));
-  world.Init(Pathfinding::Vec2(0, 0), Pathfinding::Vec2(49, 42));
+  Pathfinding::CPathSolver world(Pathfinding::Vec2(200, 200));
+  world.Init(Pathfinding::Vec2(0, 0), Pathfinding::Vec2(150, 172));
 
   while (CRenderEngine::Get().IsWindowRunning())
   {
@@ -15,6 +17,7 @@ int main()
     CRenderEngine::Get().Update();
   }
 
+  CTimeManager::Shutdown();
   CRenderEngine::Terminate();
   return 0;
 }

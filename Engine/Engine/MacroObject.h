@@ -13,7 +13,7 @@
 *     Logger
 *
 */
-void _dbgprint(const char* _sMode, const char* _sFilename, int _iLine, const char* _sLevel, const char* _sFormat, ...);
+void ENGINE_API _dbgprint(const char* _sMode, const char* _sFilename, int _iLine, const char* _sLevel, const char* _sFormat, ...);
 
 
 #define ANSI_COLOR_YELLOW  "\x1b[33m"

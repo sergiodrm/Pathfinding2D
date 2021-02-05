@@ -13,5 +13,6 @@ int main()
   }
 
   CRenderEngine::Terminate();
+
   return 0;
 }
