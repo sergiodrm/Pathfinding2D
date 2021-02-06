@@ -30,7 +30,16 @@ void ENGINE_API _dbgprint(const char* _sMode, const char* _sFilename, int _iLine
 #define PRINT_ERROR(_sFormat, ...)
 #endif
 
+/**
+ *
+ *    Hierarchy class base
+ *
+ */
 
+#define DECLARE_BASE_CLASS(_BASE) \
+public:\
+  typedef _BASE Super; \
+private:
 
 /**
 *
@@ -50,7 +59,9 @@ void ENGINE_API _dbgprint(const char* _sMode, const char* _sFilename, int _iLine
 
 #else
 
-#define ensure_msg(_bTrueCondition, _sMsg)
-#define ensure(_bTrueCondition)
+#define ensure_msg(_bTrueCondition, _sMsg)  \
+  ensure(_bTrueCondition)
+#define ensure(_bTrueCondition)             \
+  assert(_bTrueCondition)
 
 #endif

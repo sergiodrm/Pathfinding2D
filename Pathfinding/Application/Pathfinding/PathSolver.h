@@ -3,6 +3,7 @@
 #include "Engine/DrawUtilities/Grid.h"
 #include "Utils.h"
 #include <vector>
+#include "Engine/Map/Map.h"
 #include "Node.h"
 
 namespace Pathfinding
@@ -16,14 +17,15 @@ namespace Pathfinding
 	{
 	public:
 
-		CPathSolver(const Vec2& _worldSize);
+		explicit CPathSolver();
 
 		void SetOrigin(const Vec2& _origin);
 		void SetDestiny(const Vec2& _destiny);
 		void SetHeuristic(HeuristicFunction _pFunction);
 
-		void Init(const Vec2& _origin, const Vec2& _destiny);
+		void Init(CMap* _collisionMap, const Vec2& _origin, const Vec2& _destiny);
 		void PathfindingSlot();
+		void Shutdown();
 
 	private:
 		CNode* GetNextPathNode();
@@ -39,7 +41,7 @@ namespace Pathfinding
     static CNode* FindNode(std::vector<CNode*>& _container, const Vec2& _coordenates);
 	private:
 
-		CGrid m_grid;
+		CMap* m_pCollisionMap;
 		Vec2 m_origin;
 		Vec2 m_destiny;
 		HeuristicFunction m_pHeuristicFunction;

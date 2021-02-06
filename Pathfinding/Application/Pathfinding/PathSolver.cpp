@@ -1,20 +1,18 @@
 #include "PathSolver.h"
 
 #include <algorithm>
+#include <string>
+
 #include "Engine/Timer/TimeManager.h"
 #include "Engine/MacroObject.h"
 #include "Heuristic.h"
 
-#define RENDER_FEEDBACK 0
+#define RENDER_FEEDBACK 1
 
-Pathfinding::CPathSolver::CPathSolver(const Vec2& _worldSize)
-  : m_grid(_worldSize.GetX(), _worldSize.GetY())
-{
-  m_pHeuristicFunction = std::bind(&Heuristics::Euclidean, std::placeholders::_1, std::placeholders::_2);
-  //m_pHeuristicFunction = std::bind(&Heuristics::Manhattan, std::placeholders::_1, std::placeholders::_2);
-  m_origin = Vec2(0, 0);
-  m_destiny = Vec2(_worldSize.GetX() - 1, _worldSize.GetY() - 1);
-}
+Pathfinding::CPathSolver::CPathSolver()
+  : m_pHeuristicFunction(std::bind(&Heuristics::Euclidean, std::placeholders::_1, std::placeholders::_2)),
+  m_origin(0, 0), m_destiny(0, 0), m_pCollisionMap(nullptr)
+{}
 
 void Pathfinding::CPathSolver::SetOrigin(const Vec2& _origin)
 {
@@ -31,29 +29,30 @@ void Pathfinding::CPathSolver::SetHeuristic(HeuristicFunction _pFunction)
   m_pHeuristicFunction = std::bind(_pFunction, std::placeholders::_1, std::placeholders::_2);
 }
 
-void Pathfinding::CPathSolver::Init(const Vec2& _origin, const Vec2& _destiny)
+void Pathfinding::CPathSolver::Init(CMap* _collisionMap, const Vec2& _origin, const Vec2& _destiny)
 {
+  m_pCollisionMap = _collisionMap;
   m_origin = _origin;
   m_destiny = _destiny;
   m_bPathFound = false;
   m_openNodes.clear();
   m_closedNodes.clear();
-  m_openNodes.reserve(m_grid.GetSize());
-  m_closedNodes.reserve(m_grid.GetSize());
+  m_openNodes.reserve(m_pCollisionMap->GetSize());
+  m_closedNodes.reserve(m_pCollisionMap->GetSize());
   CNode* pInit = new CNode(m_origin, nullptr);
   pInit->SetCostG(0);
   pInit->SetCostH(m_pHeuristicFunction(m_origin, m_destiny));
   m_openNodes.push_back(pInit);
 #if RENDER_FEEDBACK
-  m_grid.ActiveRectangle(_origin.GetY(), _origin.GetX());
-  m_grid.ActiveRectangle(_destiny.GetY(), _destiny.GetX());
+  m_pCollisionMap->ActiveRectangle(_origin.GetY(), _origin.GetX());
+  m_pCollisionMap->ActiveRectangle(_destiny.GetY(), _destiny.GetX());
   {
     float tColor[4] = { 0.2f, 0.f, 0.7f, 1.f };
-    m_grid.SetRectangleColor(_origin.GetY(), _origin.GetX(), tColor);
+    m_pCollisionMap->SetRectangleColor(_origin.GetY(), _origin.GetX(), tColor);
   }
   {
     float tColor[4] = { 0.2f, 0.7f, 0.f, 1.f };
-    m_grid.SetRectangleColor(_destiny.GetY(), _destiny.GetX(), tColor);
+    m_pCollisionMap->SetRectangleColor(_destiny.GetY(), _destiny.GetX(), tColor);
   }
 #endif
 }
@@ -97,7 +96,6 @@ void Pathfinding::CPathSolver::PathfindingSlot()
 #if RENDER_FEEDBACK
       UpdateGrid(pCurrentNode->GetCoordenates());
 #endif // RENDER_FEEDBACK
-
     }
   }
 #if !RENDER_FEEDBACK
@@ -108,6 +106,11 @@ void Pathfinding::CPathSolver::PathfindingSlot()
     bPrint = false;
   }
 #endif
+}
+
+void Pathfinding::CPathSolver::Shutdown()
+{
+  CMap::DestroyMap(m_pCollisionMap);
 }
 
 Pathfinding::CNode* Pathfinding::CPathSolver::GetNextPathNode()
@@ -130,8 +133,8 @@ void Pathfinding::CPathSolver::UpdateGrid(const Vec2& _currentPosition)
     if (pNode->GetCoordenates() != m_origin && pNode->GetCoordenates() != m_destiny)
     {
       SColor color = GetColor(pNode->GetCoordenates(), true);
-      m_grid.ActiveRectangle(pNode->GetCoordenates().GetY(), pNode->GetCoordenates().GetX());
-      m_grid.SetRectangleColor(pNode->GetCoordenates().GetY(), pNode->GetCoordenates().GetX(), color.m_tColor);
+      m_pCollisionMap->ActiveRectangle(pNode->GetCoordenates().GetY(), pNode->GetCoordenates().GetX());
+      m_pCollisionMap->SetRectangleColor(pNode->GetCoordenates().GetY(), pNode->GetCoordenates().GetX(), color.m_tColor);
     }
   }
   for (uint uIndex = 0; uIndex < m_closedNodes.size(); ++uIndex)
@@ -140,14 +143,14 @@ void Pathfinding::CPathSolver::UpdateGrid(const Vec2& _currentPosition)
     if (pNode->GetCoordenates() != m_origin && pNode->GetCoordenates() != m_destiny)
     {
       SColor color = GetColor(pNode->GetCoordenates(), false);
-      m_grid.ActiveRectangle(pNode->GetCoordenates().GetY(), pNode->GetCoordenates().GetX());
-      m_grid.SetRectangleColor(pNode->GetCoordenates().GetY(), pNode->GetCoordenates().GetX(), color.m_tColor);
+      m_pCollisionMap->ActiveRectangle(pNode->GetCoordenates().GetY(), pNode->GetCoordenates().GetX());
+      m_pCollisionMap->SetRectangleColor(pNode->GetCoordenates().GetY(), pNode->GetCoordenates().GetX(), color.m_tColor);
     }
   }
   if (_currentPosition != m_origin && _currentPosition != m_destiny)
   {
     float tColor[] = { 1.f, 1.f, 1.f, 1.f };
-    m_grid.SetRectangleColor(_currentPosition.GetY(), _currentPosition.GetX(), tColor);
+    m_pCollisionMap->SetRectangleColor(_currentPosition.GetY(), _currentPosition.GetX(), tColor);
   }
 }
 
@@ -158,9 +161,9 @@ bool Pathfinding::CPathSolver::CheckGoalAchieved(CNode* _pCurrentNode) const
 
 bool Pathfinding::CPathSolver::CheckCollision(const Vec2& _coordenates) const
 {
-  // TODO Check with collision map (In coming).
-  return _coordenates.GetX() >= 0 && _coordenates.GetX() < m_grid.GetNumOfColumns() &&
-    _coordenates.GetY() >= 0 && _coordenates.GetY() < m_grid.GetNumOfRows();
+  return _coordenates.GetX() >= 0 && _coordenates.GetX() < m_pCollisionMap->GetNumOfColumns() &&
+    _coordenates.GetY() >= 0 && _coordenates.GetY() < m_pCollisionMap->GetNumOfRows() &&
+    !m_pCollisionMap->GetCellState(_coordenates.GetY(), _coordenates.GetX());
 }
 
 void Pathfinding::CPathSolver::MakePath(CNode* _pGoal)
@@ -174,9 +177,9 @@ void Pathfinding::CPathSolver::MakePath(CNode* _pGoal)
       color = GetColor(pCurrent->GetCoordenates());
     }
 #if !RENDER_FEEDBACK
-    m_grid.ActiveRectangle(pCurrent->GetCoordenates().GetY(), pCurrent->GetCoordenates().GetX());
+    m_pCollisionMap->ActiveRectangle(pCurrent->GetCoordenates().GetY(), pCurrent->GetCoordenates().GetX());
 #endif
-    m_grid.SetRectangleColor(pCurrent->GetCoordenates().GetY(), pCurrent->GetCoordenates().GetX(), color.m_tColor);
+    m_pCollisionMap->SetRectangleColor(pCurrent->GetCoordenates().GetY(), pCurrent->GetCoordenates().GetX(), color.m_tColor);
     pCurrent = pCurrent->GetParent();
   }
 }

@@ -15,8 +15,5 @@ int main()
 
   CRenderEngine::Terminate();*/
 
-  CMap loadedMap = CMap::LoadMap("Map1.txt");
-  CMap::SaveMap("Map2.txt", loadedMap);
-
   return 0;
 }

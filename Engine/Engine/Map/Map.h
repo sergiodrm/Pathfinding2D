@@ -2,30 +2,33 @@
 
 #include <vector>
 #include "Engine/MacroObject.h"
+#include "Engine/DrawUtilities/Grid.h"
 
-class ENGINE_API CMap
+class ENGINE_API CMap : public CGrid
 {
 public:
 
-  explicit CMap();
-  explicit CMap(size_t _numOfRows, size_t _numOfCols);
 
   bool GetCellState(size_t _row, size_t _col) const;
   void SetCellState(size_t _row, size_t _col, bool _bState);
 
-  static CMap CreateMap(const char* _sCollisionMap);
-  static CMap LoadMap(const char* _sFilename);
+
+  static CMap* CreateMap(const char* _sCollisionMap);
+  static CMap* LoadMap(const char* _sFilename);
   static void SaveMap(const char* _sFilename, const CMap& _map);
+  static void DestroyMap(CMap* _pMap);
 
-private:
 
-  size_t RC2Index(size_t _row, size_t _col) const;
-  void Index2RC(size_t _index, size_t& row_, size_t& col_) const;
+protected:
+  explicit CMap(size_t _numOfRows = 0, size_t _numOfCols = 0);
+
+  virtual void Draw_Internal(const Vector2& _screenSize) override;
+  void RenderMap();
 
 private:
 
   std::vector<bool> m_wallsMap;
-  size_t m_numberOfRows;
-  size_t m_numberOfColumns;
+  bool m_bUpdatedMap;
 };
+
 

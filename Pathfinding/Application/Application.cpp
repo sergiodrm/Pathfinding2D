@@ -8,15 +8,15 @@ int main()
   CRenderEngine::Init();
   CTimeManager::Init();
 
-  Pathfinding::CPathSolver world(Pathfinding::Vec2(200, 200));
-  world.Init(Pathfinding::Vec2(0, 0), Pathfinding::Vec2(150, 172));
+  Pathfinding::CPathSolver pathSolver;
+  pathSolver.Init(CMap::LoadMap("TestMap.txt"), Pathfinding::Vec2(0, 0), Pathfinding::Vec2(40, 9));
 
   while (CRenderEngine::Get().IsWindowRunning())
   {
-    world.PathfindingSlot();
+    pathSolver.PathfindingSlot();
     CRenderEngine::Get().Update();
   }
-
+  pathSolver.Shutdown();
   CTimeManager::Shutdown();
   CRenderEngine::Terminate();
   return 0;

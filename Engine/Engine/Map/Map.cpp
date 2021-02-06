@@ -3,12 +3,9 @@
 #include "Engine/FileSystem/MapSaver.h"
 
 
-CMap::CMap()
-  : m_wallsMap(), m_numberOfRows(0), m_numberOfColumns(0)
-{}
-
 CMap::CMap(size_t _numOfRows, size_t _numOfCols)
-  : m_wallsMap(), m_numberOfRows(0), m_numberOfColumns(0) 
+  : Super(_numOfRows, _numOfCols),
+  m_wallsMap(), m_bUpdatedMap(false)
 {}
 
 bool CMap::GetCellState(size_t _row, size_t _col) const 
@@ -21,24 +18,26 @@ void CMap::SetCellState(size_t _row, size_t _col, bool _bState)
 {
   size_t index = RC2Index(_row, _col);
   m_wallsMap[index] = _bState;
+  m_bUpdatedMap = true;
 }
 
-CMap CMap::CreateMap(const char* _sCollisionMap)
+
+CMap* CMap::CreateMap(const char* _sCollisionMap)
 {
   ensure(_sCollisionMap != nullptr);
   size_t index = 0;
   size_t rows = 1;
   size_t cols = 0;
-  CMap collisionMap;
+  std::vector<bool> collisions;
   while (_sCollisionMap[index] != '\0')
   {
     switch (_sCollisionMap[index])
     {
     case '0':
-      collisionMap.m_wallsMap.push_back(false);
+      collisions.push_back(false);
       break;
     case '1':
-      collisionMap.m_wallsMap.push_back(true);
+      collisions.push_back(true);
       break;
     case '\n':
       if (cols == 0)
@@ -47,12 +46,14 @@ CMap CMap::CreateMap(const char* _sCollisionMap)
     }
     ++index;
   }
-  collisionMap.m_numberOfColumns = cols;
-  collisionMap.m_numberOfRows = rows;
+  if (_sCollisionMap[index -1 ] == '\n') --rows;
+  CMap* collisionMap = new CMap(rows, cols);
+  collisionMap->m_wallsMap = collisions;
+  collisionMap->RenderMap();
   return collisionMap;
 }
 
-CMap CMap::LoadMap(const char* _sFilename)
+CMap* CMap::LoadMap(const char* _sFilename)
 {
   ensure(_sFilename != nullptr);
   std::string stringMap = MapSaveSystem::LoadMap(_sFilename);
@@ -72,13 +73,31 @@ void CMap::SaveMap(const char* _sFilename, const CMap& _map)
   MapSaveSystem::SaveMap(_sFilename, content.c_str());
 }
 
-size_t CMap::RC2Index(size_t _row, size_t _col) const
+void CMap::DestroyMap(CMap* _pMap)
 {
-  return _row * m_numberOfColumns + _col;
+  delete _pMap;
 }
 
-void CMap::Index2RC(size_t _index, size_t& row_, size_t& col_) const
+void CMap::Draw_Internal(const Vector2& _screenSize)
 {
-  row_ = _index / m_numberOfColumns;
-  col_ = _index % m_numberOfColumns;
+  if (m_bUpdatedMap)
+    RenderMap();
+  Super::Draw_Internal(_screenSize);
 }
+
+void CMap::RenderMap()
+{
+  float color[] = { 0.9f, 0.9f, 0.9f,1.f };
+  for (size_t index = 0; index < m_wallsMap.size(); ++index)
+  {
+    if (m_wallsMap[index])
+    {
+      size_t row, col;
+      Index2RC(index, row, col);
+      Super::ActiveRectangle(row, col);
+      Super::SetRectangleColor(row, col, color);
+    }
+  }
+  m_bUpdatedMap = false;
+}
+
