@@ -30,7 +30,7 @@ bool CRenderEngine::IsWindowRunning() const
 
 void CRenderEngine::Update()
 {
-  lgfx_clearcolorbuffer(0.1f, 0.1f, 0.1f);
+  lgfx_clearcolorbuffer(NORMALIZE_RGB(171), NORMALIZE_RGB(178), NORMALIZE_RGB(185));
 
   ProcessDrawFunctions();
 

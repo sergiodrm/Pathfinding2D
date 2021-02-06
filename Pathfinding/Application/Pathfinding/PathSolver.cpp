@@ -7,7 +7,7 @@
 #include "Engine/MacroObject.h"
 #include "Heuristic.h"
 
-#define RENDER_FEEDBACK 1
+#define RENDER_FEEDBACK 0
 
 Pathfinding::CPathSolver::CPathSolver()
   : m_pHeuristicFunction(std::bind(&Heuristics::Euclidean, std::placeholders::_1, std::placeholders::_2)),
@@ -102,7 +102,7 @@ void Pathfinding::CPathSolver::PathfindingSlot()
   static bool bPrint = true;
   if (bPrint)
   {
-    PRINT_LOG("Pathfinding time: %.5f", CTimeManager::GetInstance().StopTimer());
+    PRINT_LOG("Pathfinding time: %.5f seconds", CTimeManager::GetInstance().StopTimer());
     bPrint = false;
   }
 #endif
@@ -171,7 +171,7 @@ void Pathfinding::CPathSolver::MakePath(CNode* _pGoal)
   CNode* pCurrent = _pGoal;
   while (pCurrent != nullptr)
   {
-    SColor color({199.f / 255.f, 0.f, 57.f / 255.f, 1.f});
+    SColor color({NORMALIZE_RGB(29), NORMALIZE_RGB(131), NORMALIZE_RGB(72), 1.f});
     if (pCurrent->GetCoordenates() == m_destiny || pCurrent->GetCoordenates() == m_origin)
     {
       color = GetColor(pCurrent->GetCoordenates());
@@ -198,10 +198,10 @@ Pathfinding::SColor Pathfinding::CPathSolver::GetColor(const Vec2& _coordenates,
   }
   if (_bInOpenList)
   {
-    SColor color({ 255.f / 255.f, 195.f / 255.f, 0.f, 1.f });
+    SColor color({ NORMALIZE_RGB(212), NORMALIZE_RGB(172), NORMALIZE_RGB(13), 1.f });
     return color;
   }
-  SColor color({ 88.f / 255.f, 24.f / 255.f, 69.f / 255.f, 1.f });
+  SColor color({ NORMALIZE_RGB(133), NORMALIZE_RGB(193), NORMALIZE_RGB(206), 1.f });
   return color;
 }
 

@@ -41,6 +41,9 @@ public:\
   typedef _BASE Super; \
 private:
 
+// RGB util
+#define NORMALIZE_RGB(_code) _code / 255.f
+
 /**
 *
 *     Check vars

@@ -87,7 +87,7 @@ void CMap::Draw_Internal(const Vector2& _screenSize)
 
 void CMap::RenderMap()
 {
-  float color[] = { 0.9f, 0.9f, 0.9f,1.f };
+  float color[] = { NORMALIZE_RGB(27), NORMALIZE_RGB(79), NORMALIZE_RGB(114), 1.f };
   for (size_t index = 0; index < m_wallsMap.size(); ++index)
   {
     if (m_wallsMap[index])
