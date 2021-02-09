@@ -24,6 +24,13 @@ public:
     m_bindedCallbacks.push_back(callback);
   }
 
+  template <typename T, void(T::* Method)(Args...) const>
+  void Bind(void* _pInstance)
+  {
+    Callback callback = std::make_pair(_pInstance, &Invoke<T, Method>);
+    m_bindedCallbacks.push_back(callback);
+  }
+
   void Broadcast(Args... _args)
   {
     for (Callback& iterator : m_bindedCallbacks)
@@ -37,6 +44,12 @@ public:
 private:
 
   template <typename T, void(T::*Method)(Args...)>
+  static void Invoke(void* _pInstance, Args... _args)
+  {
+    (static_cast<T*>(_pInstance)->*Method)(_args...);
+  }
+
+  template <typename T, void(T::* Method)(Args...) const>
   static void Invoke(void* _pInstance, Args... _args)
   {
     (static_cast<T*>(_pInstance)->*Method)(_args...);

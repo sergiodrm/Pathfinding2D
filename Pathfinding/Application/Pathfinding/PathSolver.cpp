@@ -10,7 +10,7 @@
 #define RENDER_FEEDBACK 1
 
 Pathfinding::CPathSolver::CPathSolver()
-  : m_pHeuristicFunction(std::bind(&Heuristics::Euclidean, std::placeholders::_1, std::placeholders::_2)),
+  : m_pHeuristicFunction(std::bind(&Heuristics::Manhattan, std::placeholders::_1, std::placeholders::_2)),
   m_origin(0, 0), m_destiny(0, 0), m_pCollisionMap(nullptr)
 {}
 

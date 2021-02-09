@@ -33,10 +33,10 @@ std::string MapSaveSystem::LoadMap(const char* _sFilename)
     std::string content(fileStream.ReadAll());
     fileStream.CloseFile();
     size_t mapPosition = content.find("<map>");
-    size_t endMapPosition = content.find("</map>");
+    size_t endMapPosition = content.find("\n</map>");
     if (mapPosition != std::string::npos && endMapPosition != std::string::npos)
     {
-      std::string map(content.substr(mapPosition + 6, endMapPosition - (mapPosition + 6)));
+      std::string map(content.substr(mapPosition + 6, endMapPosition - (mapPosition + 7)));
       map.shrink_to_fit();
       return map;
     }

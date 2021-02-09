@@ -45,6 +45,13 @@ Vector2 CRenderEngine::GetWindowSize() const
   return Vector2(static_cast<float>(iWidth), static_cast<float>(iHeight));
 }
 
+Vector2 CRenderEngine::GetMousePosition() const
+{
+  double xpos, ypos;
+  glfwGetCursorPos(m_pWindow, &xpos, &ypos);
+  return Vector2(static_cast<float>(xpos), static_cast<float>(ypos));
+}
+
 struct GLFWwindow* CRenderEngine::GetWindow() const
 {
   return m_pWindow;
@@ -68,6 +75,11 @@ void CRenderEngine::DrawLine(const Vector2& _origin, const Vector2& _destiny)
 void CRenderEngine::DrawRectangle(const Vector2& _position, const Vector2& _size)
 {
   lgfx_drawrect(_position.GetX(), _position.GetY(), _size.GetX(), _size.GetY());
+}
+
+void CRenderEngine::DrawCircle(const Vector2& _position, const Vector2& _size)
+{
+  lgfx_drawoval(_position.GetX(), _position.GetY(), _size.GetX(), _size.GetY());
 }
 
 void CRenderEngine::Init_Internal()

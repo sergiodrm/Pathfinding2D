@@ -1,19 +1,28 @@
 
 #include <cstdio>
 #include "Engine/Render/RenderEngine.h"
-#include "Engine/Map/Map.h"
+#include "Engine/Input/InputManager.h"
+#include "MapGenerator/MapGenerator.h"
 
 int main()
 {
-  /*CRenderEngine::Init();
+  CRenderEngine::Init();
+  CInputManager::Init();
+
+  CMapGenerator mapGenerator;
+  mapGenerator.Init(100, 100);
+
 
   while (CRenderEngine::Get().IsWindowRunning())
   {
-
+    CInputManager::GetInstance().Update();
+    mapGenerator.Update();
     CRenderEngine::Get().Update();
   }
-
-  CRenderEngine::Terminate();*/
+  mapGenerator.SaveMap("GeneratedMap.txt");
+  mapGenerator.Shutdown();
+  CInputManager::Shutdown();
+  CRenderEngine::Terminate();
 
   return 0;
 }

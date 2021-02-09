@@ -8,6 +8,7 @@ std::map<int, CInputManager::SKeyStatus> CInputManager::m_keyStatus;
 void CInputManager::Init()
 {
   CreateSingleton();
+  GetSingleton().Init_Internal();
 }
 
 CInputManager& CInputManager::GetInstance()
@@ -18,18 +19,6 @@ CInputManager& CInputManager::GetInstance()
 void CInputManager::Shutdown()
 {
   DestroySingleton();
-}
-
-template <typename T, void(T::* M)(int, int)>
-void CInputManager::BindKeyboardCallback(T* _pInstance)
-{
-  m_keyboardDispatcher.Bind<T, M>(_pInstance);
-}
-
-template <typename T, void(T::* M)(int, int, Vector2)>
-void CInputManager::BindMouseButtonCallback(T* _pInstance)
-{
-  m_mouseButtonDispatcher.Bind<T, M>(_pInstance);
 }
 
 void CInputManager::Broadcast()
@@ -43,8 +32,8 @@ void CInputManager::Broadcast()
         m_keyboardDispatcher.Broadcast(iterator.first, iterator.second.m_bCurrentFrame ? PRESSED : RELEASED);
       }
       else m_mouseButtonDispatcher.Broadcast(iterator.first, iterator.second.m_bCurrentFrame ? PRESSED : RELEASED);
+      iterator.second.m_bLastFrame = iterator.second.m_bCurrentFrame;
     }
-    iterator.second.m_bLastFrame = iterator.second.m_bCurrentFrame;
   }
 }
 
@@ -61,13 +50,13 @@ void CInputManager::Update()
 void CInputManager::KeyboardCallback(GLFWwindow* _pWindow, int _key, int _scanCode, int _action, int _mode)
 {
   std::map<int, SKeyStatus>::iterator item = m_keyStatus.find(_key);
-  item->second = _action == GLFW_PRESS;
+  item->second.m_bCurrentFrame = _action == GLFW_PRESS;
 }
 
 void CInputManager::MouseCallback(GLFWwindow* _pWindow, int _button, int _action, int _mod)
 {
   std::map<int, SKeyStatus>::iterator item = m_keyStatus.find(_button);
-  item->second = _action == GLFW_PRESS;
+  item->second.m_bCurrentFrame = _action == GLFW_PRESS;
 }
 
 void CInputManager::Init_Internal()

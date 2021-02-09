@@ -38,3 +38,9 @@ class ENGINE_API CRectangle : public CShape
 public:
   virtual void Draw() const override;
 };
+
+class ENGINE_API CCircle : public CShape
+{
+public:
+  virtual void Draw() const override;
+};

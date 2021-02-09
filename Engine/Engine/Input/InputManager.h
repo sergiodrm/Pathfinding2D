@@ -32,7 +32,7 @@ public:
   template <typename T, void(T::*M)(int, int)>
   void BindKeyboardCallback(T* _pInstance);
 
-  template <typename T, void(T::* M)(int, int, Vector2)>
+  template <typename T, void(T::* M)(int, int)>
   void BindMouseButtonCallback(T* _pInstance);
 
   void Update();
@@ -54,3 +54,18 @@ private:
 
 };
 
+/**
+ * Templates definition
+ */
+
+template <typename T, void(T::* M)(int, int)>
+void CInputManager::BindKeyboardCallback(T* _pInstance)
+{
+  m_keyboardDispatcher.Bind<T, M>(_pInstance);
+}
+
+template <typename T, void(T::* M)(int, int)>
+void CInputManager::BindMouseButtonCallback(T* _pInstance)
+{
+  m_mouseButtonDispatcher.Bind<T, M>(_pInstance);
+}

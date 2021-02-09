@@ -8,10 +8,6 @@
 // Forward declaration
 struct GLFWwindow;
 
-// Callback draw function declaration
-typedef void (*ExternalDrawFunction)(void*, const Vector2&);
-// Callback for mouse input
-typedef void (*MouseInputCallback)(int, int, const Vector2&);
 
 class ENGINE_API CRenderEngine : public ISingletonBase<CRenderEngine>
 {
@@ -34,8 +30,11 @@ public:
   void Update();
   Vector2 GetWindowSize() const;
   GLFWwindow* GetWindow() const;
+  Vector2 GetMousePosition() const;
 
   template <typename T, void(T::*M)(const Vector2&)>
+  void BindExternalDrawDelegate(void* _pInstance);
+  template <typename T, void(T::* M)(const Vector2&) const>
   void BindExternalDrawDelegate(void* _pInstance);
 
   /**
@@ -45,6 +44,7 @@ public:
   static void SetColor(float _fR, float _fG, float _fB);
   static void DrawLine(const Vector2& _origin, const Vector2& _destiny);
   static void DrawRectangle(const Vector2& _position, const Vector2& _size);
+  static void DrawCircle(const Vector2& _position, const Vector2& _size);
 
 private:
 
@@ -68,4 +68,8 @@ void CRenderEngine::BindExternalDrawDelegate(void* _pInstance)
 {
   m_externalDrawDispatcher.Bind<T, M>(_pInstance);
 }
-
+template <typename T, void(T::* M)(const Vector2&) const>
+void CRenderEngine::BindExternalDrawDelegate(void* _pInstance)
+{
+  m_externalDrawDispatcher.Bind<T, M>(_pInstance);
+}

@@ -9,7 +9,7 @@ int main()
   CTimeManager::Init();
 
   Pathfinding::CPathSolver pathSolver;
-  pathSolver.Init(CMap::LoadMap("TestMap.txt"), Pathfinding::Vec2(0, 0), Pathfinding::Vec2(49, 0));
+  pathSolver.Init(CMap::LoadMap("GeneratedMap.txt"), Pathfinding::Vec2(0, 0), Pathfinding::Vec2(99, 99));
 
   while (CRenderEngine::Get().IsWindowRunning())
   {

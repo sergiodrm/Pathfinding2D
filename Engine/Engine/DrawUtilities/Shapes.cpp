@@ -45,3 +45,12 @@ void CRectangle::Draw() const
     CRenderEngine::DrawRectangle(m_position, m_size);
   }
 }
+
+void CCircle::Draw() const
+{
+  if (m_bActive)
+  {
+    CRenderEngine::SetColor(m_tColor[0], m_tColor[1], m_tColor[2]);
+    CRenderEngine::DrawCircle(m_position, m_size); // TODO
+  }
+}
