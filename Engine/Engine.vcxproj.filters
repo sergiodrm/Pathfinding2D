@@ -16,6 +16,8 @@
     <ClInclude Include="Engine\FileSystem\FileStream.h" />
     <ClInclude Include="Engine\FileSystem\MapSaver.h" />
     <ClInclude Include="Engine\Map\Map.h" />
+    <ClInclude Include="Engine\EventSystem\Dispatcher\Dispatcher.h" />
+    <ClInclude Include="Engine\CoreUtilities\KeyCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Render\RenderEngine.cpp" />

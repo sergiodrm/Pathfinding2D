@@ -32,7 +32,7 @@ public:
   inline size_t GetNumOfRows() const { return m_numberOfRows; }
   inline size_t GetNumOfColumns() const { return m_numberOfColumns; }
 
-  static void Draw(void* _pInstance, const Vector2& _screenSize);
+  void Draw(const Vector2& _screenSize);
 
 protected:
 

@@ -7,7 +7,7 @@
 #include "Engine/MacroObject.h"
 #include "Heuristic.h"
 
-#define RENDER_FEEDBACK 0
+#define RENDER_FEEDBACK 1
 
 Pathfinding::CPathSolver::CPathSolver()
   : m_pHeuristicFunction(std::bind(&Heuristics::Euclidean, std::placeholders::_1, std::placeholders::_2)),

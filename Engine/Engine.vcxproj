@@ -159,6 +159,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\CoreUtilities\KeyCodes.h" />
+    <ClInclude Include="Engine\EventSystem\Dispatcher\Dispatcher.h" />
     <ClInclude Include="Engine\Map\Map.h" />
     <ClInclude Include="Engine\DrawUtilities\Grid.h" />
     <ClInclude Include="Engine\DrawUtilities\Shapes.h" />

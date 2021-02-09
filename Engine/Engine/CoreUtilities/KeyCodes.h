@@ -1,0 +1,34 @@
+#pragma once
+
+#define KEYBOARD_A 65
+#define KEYBOARD_B 66
+#define KEYBOARD_C 67
+#define KEYBOARD_D 68
+#define KEYBOARD_E 69
+#define KEYBOARD_F 70
+#define KEYBOARD_G 71
+#define KEYBOARD_H 72
+#define KEYBOARD_I 73
+#define KEYBOARD_J 74
+#define KEYBOARD_K 75
+#define KEYBOARD_L 76
+#define KEYBOARD_M 77
+#define KEYBOARD_N 78
+#define KEYBOARD_O 79
+#define KEYBOARD_P 80
+#define KEYBOARD_Q 81
+#define KEYBOARD_R 82
+#define KEYBOARD_S 83
+#define KEYBOARD_T 84
+#define KEYBOARD_U 85 
+#define KEYBOARD_V 86
+#define KEYBOARD_W 87
+#define KEYBOARD_X 88
+#define KEYBOARD_Y 89
+#define KEYBOARD_Z 90
+#define KEYBOARD_SPACE 32
+#define MOUSE_BUTTON_LEFT 1
+#define MOUSE_BUTTON_RIGHT 2
+#define MOUSE_BUTTON_MIDDLE 3
+#define PRESSED 1
+#define RELEASED 0

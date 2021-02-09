@@ -45,15 +45,9 @@ Vector2 CRenderEngine::GetWindowSize() const
   return Vector2(static_cast<float>(iWidth), static_cast<float>(iHeight));
 }
 
-void CRenderEngine::InsertExternalDrawFunction(void* _pInstance, ExternalDrawFunction _pCallback)
+struct GLFWwindow* CRenderEngine::GetWindow() const
 {
-  ensure(_pInstance != nullptr && _pCallback != nullptr);
-  m_externalDrawFunctions.push_back(std::pair<void*, ExternalDrawFunction>(_pInstance, _pCallback));
-}
-
-void CRenderEngine::SetMouseInputCallback(MouseInputCallback _pCallback)
-{
-  
+  return m_pWindow;
 }
 
 void CRenderEngine::SetColor(float _fGrey)
@@ -66,7 +60,7 @@ void CRenderEngine::SetColor(float _fR, float _fG, float _fB)
   lgfx_setcolor(_fR, _fG, _fB, 1.f);
 }
 
-void CRenderEngine::DrawLine(const Vector2& _origin, const Vector2 _destiny)
+void CRenderEngine::DrawLine(const Vector2& _origin, const Vector2& _destiny)
 {
   lgfx_drawline(_origin.GetX(), _origin.GetY(), _destiny.GetX(), _destiny.GetY());
 }
@@ -97,10 +91,5 @@ void CRenderEngine::Terminate_Internal()
 
 void CRenderEngine::ProcessDrawFunctions()
 {
-  Vector2 screenSize(GetWindowSize());
-  for (const std::pair<void*, ExternalDrawFunction>& iterator : m_externalDrawFunctions)
-  {
-    ensure(iterator.first != nullptr && iterator.second != nullptr);
-    iterator.second(iterator.first, screenSize);
-  }
+  m_externalDrawDispatcher.Broadcast(GetWindowSize());
 }

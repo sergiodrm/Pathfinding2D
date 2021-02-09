@@ -7,7 +7,7 @@ CGrid::CGrid(size_t _uRows, size_t _uColumns)
   m_numberOfColumns(_uColumns),
   m_bActive(true)
 {
-  CRenderEngine::Get().InsertExternalDrawFunction(this, &CGrid::Draw);
+  CRenderEngine::Get().BindExternalDrawDelegate<CGrid, &CGrid::Draw>(this);
 
   for (size_t uCell = 0; uCell < _uRows * _uColumns; uCell++)
   {
@@ -51,13 +51,9 @@ void CGrid::SetRectangleColor(size_t _uRow, size_t _uCol, float _tColor[4])
   m_cells[uIndex].SetColor(_tColor[0], _tColor[1], _tColor[2]);
 }
 
-void CGrid::Draw(void* _pInstance, const Vector2 & _screenSize)
+void CGrid::Draw(const Vector2& _screenSize)
 {
-  CGrid* pGridInstance = reinterpret_cast<CGrid*>(_pInstance);
-  if (pGridInstance != nullptr && pGridInstance->m_bActive)
-  {
-    pGridInstance->Draw_Internal(_screenSize);
-  }
+  Draw_Internal(_screenSize); 
 }
 
 void CGrid::Draw_Internal(const Vector2& _screenSize)
